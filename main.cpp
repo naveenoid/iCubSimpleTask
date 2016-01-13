@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
     }
     
     command[2] = 0;
+    pos->positionMove(command.data());
     while(!done)
     {
 	  
