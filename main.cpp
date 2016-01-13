@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     std::string remotePorts="/";
     remotePorts+=robotName;
     //remotePorts+="/right_arm";
-	remotePorts+="/torso";
+	remotePorts+="/head";
 
     int numTimes = params.find("repetitions").asInt();
     std::string localPorts="/headMovement_koroibot/client";
