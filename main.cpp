@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 {
     Network yarp;
 
+    int maxSpeed;
     Property params;
     params.fromCommand(argc, argv);
 
@@ -33,15 +34,30 @@ int main(int argc, char *argv[])
     if (!params.check("repetitions"))
     {
         fprintf(stderr, "Please specify number of repetitions\n");
-        fprintf(stderr, "--repetitions num (e.g. 2)\n");
+        fprintf(stderr, "--repetitions num (e.g. 10)\n");
         return -1;
     }
     
+    if (!params.check("speed"))
+    {
+        fprintf(stderr, "Speed not specified using default\n");
+        fprintf(stderr, "--speed num (e.g. 2)\n");
+        maxSpeed = 10.0;
+     }
+    else
+    {
+        maxSpeed = params.find("speed").asInt();
+    }
+    
+    // sanity check on argument value
+    if(maxSpeed <0 || maxSpeed>50)
+    {
+        maxSpeed = 10;
+    }
+        
     std::string robotName=params.find("robot").asString().c_str();
-   // std::string robotName = "icubGazeboSim";
     std::string remotePorts="/";
     remotePorts+=robotName;
-    //remotePorts+="/right_arm";
 	remotePorts+="/head";
 
     int numTimes = params.find("repetitions").asInt();
@@ -91,11 +107,8 @@ int main(int argc, char *argv[])
         tmp[i] = 10.0;
         pos->setRefSpeed(i, tmp[i]);
     }
-
-    //pos->setRefSpeeds(tmp.data()))
     
-    //fisrst read all encoders
-    //
+    //first read all encoders
     printf("waiting for encoders");
     while(!encs->getEncoders(encoders.data()))
     {
